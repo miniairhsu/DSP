@@ -12,11 +12,13 @@ namespace Dp{
         public:
             Dsp();
             float mean1D(std::vector<float> &data);
+            float divation(std::vector<float> &data, float mean);
             float std1D(std::vector<float> &data);
             float cov1D(std::vector<float> &data1, std::vector<float> &data2);
             int convolve1D(float* in, float* out, int dataSize, float* kernel, int kernelSize);
             float var(std::vector<float> &data1);
             Eigen::MatrixXf cov(std::vector<float> &data1, std::vector<float> &data2);
+            void xcorr(std::vector<float> &data1, std::vector<float> &data2, int length, float* out);
             virtual ~Dsp();
 
         protected:

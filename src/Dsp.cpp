@@ -11,7 +11,7 @@ namespace Dp{
         for(unsigned int i = 0; i < data.size(); i ++){
             result += data[i];
         }
-        return result / (static_cast<float>(data.size()));
+        return result / data.size();
     }
 
     float Dsp::std1D(std::vector<float> &data){
@@ -76,6 +76,34 @@ namespace Dp{
         result(1,0) = cov2;
         result(1,1) = var2;
         return result;
+    }
+
+    float Dsp::divation(std::vector<float> &data, float mean){
+        float result = 0;
+        for(unsigned int i = 0; i < data.size(); i++){
+            result += pow(data[i] - mean, 2);
+        }
+        return result;
+    }
+
+    void Dsp::xcorr(std::vector<float> &data1, std::vector<float> &data2, int length, float* out){
+        float mean1 = this->mean1D(data1);
+        float mean2 = this->mean1D(data2);
+        float div1 = this->divation(data1, mean1);
+        float div2 = this->divation(data2, mean2);
+        float denom = sqrt(div1 * div2);
+        float sxy;
+        for (int delay = 0; delay < length; delay++ ) {
+            sxy = 0;
+            for( int i = 0; i < length; i++ ) {
+                int j = i + delay - length / 2;
+                while ( j < 0 )
+                    j += length;
+                j %= length;
+                sxy += (data1[i] - mean1) * (data2[j] - mean2);
+            }
+            out[delay]  = sxy / denom;
+        }
     }
 
     Dsp::~Dsp()
